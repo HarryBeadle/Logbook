@@ -1,36 +1,50 @@
 # Harry Beadle
 # log.py log book generation software
 
-from os import popen
+import os
 from sys import argv
-
+from shutil import copyfile
 import argparse
+import datetime
 
 # Parse Arguments
-parser = argparse.ArgumentParser(description = "Appends a log to logbook.html")
+parser = argparse.ArgumentParser(
+	description = "Appends a log to logbook.html")
 parser.add_argument('text', metavar='s', type=str, 
 	help = "Text for log, title or section.")
 parser.add_argument('-I', action="store_true", help="Important")
 parser.add_argument('-t', action="store_true", help="Title")
 parser.add_argument('-s', action="store_true", help="Section")
-parser.add_argument('-c', default='black', type=str, help="Color the text this CSS color")
-
+parser.add_argument('-c', default='black', type=str, 
+	help="Color the text this CSS color")
+parser.add_argument('-f', type=str, 
+	help="File to be attached to log.")
 args = parser.parse_args()
-print "Text", args.text
+
+datemark = datetime.datetime.now().strftime("%Y%m%d%H%M%s")
+
+if args.f:
+	# Log file
+	if not os.path.exists("files"):
+		os.makedirs("files")
+	file, ext = os.path.splitext(args.f)
+	dst = os.path.join("files", datemark + ext)
+	copyfile(args.f, dst)
 
 with open("logbook.html", 'a') as logbook:
-	logbook.write("<small>" + popen("echo $USER").read()[:-1] + " commited at " + popen("date", 'r').read()[:-1] + "</small><br />")
-	print "//", popen("date", 'r').read()[:-1]
+	logbook.write("<a name='" + datemark + "'><small>" + os.popen("date", 'r').read()[:-1] + "</small></a> <a href='#" + datemark + "'>🔗</a><br />")
 	if args.I:
 		logbook.write("<b style='color:red;'>Important</b><br />")
-	logbook.write("<span style='color:" + args.c + ";'>")
+	logbook.write("<span style='font-family:monospace; color:" + args.c + ";'>")
 	if args.t:
 		# Title
-		logbook.write("<h1> " + args.text + " </h1>")
+		logbook.write("<h1 style='font-family:serif;'> " + args.text + " </h1>")
 	elif args.s:
 		# Header
-		logbook.write("<h2> " + args.text + " </h2>")
+		logbook.write("<h2 style='font-family:serif;'> " + args.text + " </h2>")
 	else:
 		# Entry
 		logbook.write(args.text)
+	if args.f:
+		logbook.write("<br /><a href='" + dst + "'>Attached " + ext[1:] + " File</a>")
 	logbook.write("\n<hr></span>")
