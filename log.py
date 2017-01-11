@@ -10,26 +10,18 @@ import datetime
 # Parse Arguments
 parser = argparse.ArgumentParser(
 	description = "Appends a log to logbook.html")
-parser.add_argument('text', metavar='s', type=str, 
+parser.add_argument('text', metavar='s', type=str,
 	help = "Text for log, title or section.")
 parser.add_argument('-I', action="store_true", help="Important")
 parser.add_argument('-t', action="store_true", help="Title")
 parser.add_argument('-s', action="store_true", help="Section")
-parser.add_argument('-c', default='black', type=str, 
+parser.add_argument('-c', default='black', type=str,
 	help="Color the text this CSS color")
-parser.add_argument('-f', type=str, 
+parser.add_argument('-f', type=str, nargs='*',
 	help="File to be attached to log.")
 args = parser.parse_args()
 
 datemark = datetime.datetime.now().strftime("%Y%m%d%H%M%s")
-
-if args.f:
-	# Log file
-	if not os.path.exists("files"):
-		os.makedirs("files")
-	file, ext = os.path.splitext(args.f)
-	dst = os.path.join("files", datemark + ext)
-	copyfile(args.f, dst)
 
 with open("logbook.html", 'a') as logbook:
 	logbook.write("<a name='" + datemark + "'><small>" + os.popen("date", 'r').read()[:-1] + "</small></a> <a href='#" + datemark + "'>🔗</a><br />")
@@ -46,5 +38,12 @@ with open("logbook.html", 'a') as logbook:
 		# Entry
 		logbook.write(args.text)
 	if args.f:
-		logbook.write("<br /><a href='" + dst + "'>Attached " + ext[1:] + " File</a>")
+		if not os.path.exists("files"):
+			os.makedirs("files")
+		# list of files
+		for files in args.f:
+			name = os.path.basename(files)
+			dst = os.path.join("files", datemark + '-' + name)
+			copyfile(files, dst)
+			logbook.write("<br /><a href='" + dst + "'>" + name + "</a>")
 	logbook.write("\n<hr></span>")
