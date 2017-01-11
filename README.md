@@ -1,1 +1,3 @@
-# logbook
+# Logbook
+
+Python digital logbook.
