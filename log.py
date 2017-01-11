@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Harry Beadle
 # log.py log book generation software
 
