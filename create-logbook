@@ -17,6 +17,9 @@ cat >> logbook.html << EOF
     .url {
         font-family: monospace;
     }
+    code {
+        font-family: monospace;
+    }
 </style>
 
 EOF

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Rhys Thomas (forked from harrybeadle/logbook.git)
+# Harry Beadle & Rhys Thomas
 # log.py logbook generation software
 
 import os 
@@ -26,7 +26,7 @@ timestamp = datetime.datetime.now().strftime("%c")
 filestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 
 if not os.path.isfile("logbook.html"):
-    os.system("./create-logbook")
+    os.system("create-logbook")
 
 with open("logbook.html", 'a') as logbook:
     logbook.write("<p>" + timestamp + "</p>") # first, print the timestamp
@@ -57,7 +57,7 @@ with open("logbook.html", 'a') as logbook:
         # list of files
         for files in args.f:
             name = os.path.basename(files)
-            dst = os.path.join("files", filestamp + '-' + name)
+            dst = os.path.join("logfiles", filestamp + '-' + name)
             copyfile(files, dst)
             logbook.write("<a class=file href='" + dst + "'>" + name + "</a> ")
         logbook.write("</p>")
