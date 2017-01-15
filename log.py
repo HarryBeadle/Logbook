@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
+# Rhys Thomas (forked from harrybeadle/logbook.git)
+# log.py logbook generation software
 
-# Harry Beadle
-# log.py log book generation software
-
-import os
-from sys import argv
-from shutil import copyfile
-import argparse
+import os 
+from shutil import copyfile 
+import argparse 
 import datetime
 
 # Parse Arguments
@@ -24,23 +22,22 @@ parser.add_argument('-f', metavar='path', type=str, nargs='*',
 parser.add_argument('-u', metavar='url', type=str, nargs='*', help='URL to be attached to log')
 args = parser.parse_args()
 
-datemark = datetime.datetime.now().strftime("%Y%m%d%H%M%s")
+timestamp = datetime.datetime.now().strftime("%c")
+filestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+
+if not os.path.isfile("logbook.html"):
+    os.system("./create-logbook")
 
 with open("logbook.html", 'a') as logbook:
-    # Output date
-    logbook.write("<a name='" + datemark + "'><small style='font-family:monospace;'>" + os.popen("date", 'r').read()[:-1] + "</small></a> <a href='#" + datemark + "'>🔗</a><br />")
-    if args.I:
-        # Imporant
-        logbook.write("<b style='color:red;font-family:monospace;'>Important</b><br />")
-    logbook.write("<span style='font-family:sans-serif; color:" + args.c + ";'>")
-    if args.t:
-        # Title
-        logbook.write("<h1 style='font-family:sans-serif;'>" + args.t + "</h1>")
-    if args.s:
-        # Header
-        logbook.write("<h2 style='font-family:sans-serif;'>" + args.s + "</h2>")
-    if args.m:
-        # Entry
+    logbook.write("<p>" + timestamp + "</p>") # first, print the timestamp
+    if args.I: # important
+        logbook.write("<span class=important>Important</span><br />")
+    logbook.write("<span style='color:" + args.c + ";'>")
+    if args.t: # title
+        logbook.write("<h1>" + args.t + "</h1>")
+    if args.s: # section
+        logbook.write("<h2>" + args.s + "</h2>")
+    if args.m: # message
         message = args.m
         mode = 0
         for char in message:
@@ -53,23 +50,21 @@ with open("logbook.html", 'a') as logbook:
                     mode = 0;
             else:
                 logbook.write(char)
-    if args.f:
-        # Files
-        logbook.write("<p style='font-family:monospace;'>")
-        if not os.path.exists("files"):
-            os.makedirs("files")
+    if args.f: # file attachments
+        if not os.path.exists("logfiles"):
+            os.makedirs("logfiles")
+        logbook.write("<p>")
         # list of files
         for files in args.f:
             name = os.path.basename(files)
-            dst = os.path.join("files", datemark + '-' + name)
+            dst = os.path.join("files", filestamp + '-' + name)
             copyfile(files, dst)
-            logbook.write("<a style='text-decoration:none;border:solid 1px;padding:0.25em 0.5em 0.25em 0.5em;' href='" + dst + "'>💾 " + name + "</a> ") # Space at end required!
+            logbook.write("<a class=file href='" + dst + "'>" + name + "</a> ")
         logbook.write("</p>")
-    if args.u:
-        # Hyperlinks
-        logbook.write("<p style='font-family:monospace;'>")
+    if args.u: # hyperlinks
+        logbook.write("<p>")
         for link in args.u:
-            logbook.write("<a href='" + link + "'>" + link + "</a>")
+            logbook.write("<a class=url href='" + link + "'>" + link + "</a><br />")
             if not link == args.u[-1]:
                 logbook.write("<br />")
         logbook.write("</p>")
