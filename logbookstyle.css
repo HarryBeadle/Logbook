@@ -1,0 +1,42 @@
+/* Global Styling */
+
+* {
+	font-family: monospace;
+	color: #D3D7CF;
+}
+
+body {
+	width: 50%;
+	background-color: #151515;
+}
+
+a {
+	text-decoration: none;
+}
+
+hr {
+	width: 100%;
+	border-color: #555753;
+}
+
+/* Specific Styling */
+
+.title {}
+
+.section {}
+
+.entry {}
+
+.file {
+	border: solid 1px;
+	padding: 0.5em;
+	text-decoration: none;
+}
+
+.important {
+	color: red;
+}
+
+.timestamp {
+	color: #555753;
+}
