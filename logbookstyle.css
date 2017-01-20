@@ -6,7 +6,8 @@
 }
 
 body {
-	width: 50%;
+	width: 80%;
+	margin: auto;
 	background-color: #151515;
 }
 
@@ -16,7 +17,7 @@ a {
 
 hr {
 	width: 100%;
-	border-color: #555753;
+	border-color: #151515;
 }
 
 /* Specific Styling */
@@ -25,7 +26,12 @@ hr {
 
 .section {}
 
-.entry {}
+.entry {
+	background: #252525;
+	border-radius: 0.25em;
+	padding: 1em;
+	margin: 0.5em;
+}
 
 .file {
 	border: solid 1px;
@@ -39,4 +45,10 @@ hr {
 
 .timestamp {
 	color: #555753;
+}
+
+.copyright {
+	font-size: small;
+	text-align: center;
+	padding: 1em;
 }
