@@ -14,7 +14,6 @@ import datetime
 # Parse Arguments
 parser = argparse.ArgumentParser(
     description = "Appends a log to logbook.html")
-
 parser.add_argument('-m', metavar='message', type=str, 
     help = "message for log")
 parser.add_argument('-I', action='store_true', help="important")
