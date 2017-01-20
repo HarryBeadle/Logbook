@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/HarryBeadle/Logbook.svg?branch=master)](https://travis-ci.org/HarryBeadle/Logbook)
+[Telgram]((https://t.me/joinchat/AAAAAECn-88C7aGRNjJiVQ)
 
 # Logbook
 
