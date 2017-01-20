@@ -5,7 +5,7 @@ rm -rf .log/
 
 ./log.py -t "Logbook Test"
 ./log.py -s "Section"
-./log.py -m "Message"
+./log.py -I -m "Important message"
 ./log.py -m "Colours" -c green
 touch file1.txt file2.txt
 ./log.py -m "Files" -f file1.txt file2.txt
