@@ -27,7 +27,7 @@ parser.add_argument('-f', metavar='path', type=str, nargs='*',
 parser.add_argument('-u', metavar='url', type=str, nargs='*', 
     help='URL to be attached to log')
 parser.add_argument('-o', '--open', metavar='extension', type=str, 
-    choices=['html','pdf','md'], help='open logbook.<html|md|pdf>')
+    choices=['html','pdf','md'], const='html', help='open logbook.<html|md|pdf>')
 args = parser.parse_args()
 
 if args.open:
