@@ -1,0 +1,11 @@
+#!/bin/bash
+# script to generate test logbook
+
+./log.py -t "Logbook Test"
+./log.py -s "Section"
+./log.py -m "Message"
+./log.py -m "Colours" -c green
+touch file1.txt file2.txt
+./log.py -m "Files" -f file1.txt file2.txt
+rm file1.txt file2.txt
+./log.py -m "URLs" -u "https://harrybeadle.xyz" "https://rhthomas.github.io/"
