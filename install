@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# put in private bin if it exists
+if [[ -d ~/.bin ]]; then
+    dir=~/.bin/
+else
+    dir=/usr/local/bin/
+fi
+
+echo "Copying files to $dir"
+cp log.py $dir\log

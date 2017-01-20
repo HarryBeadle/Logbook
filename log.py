@@ -6,7 +6,7 @@
 # Debug Tools
 CSS_DEBUG = False
 
-import os 
+import os, sys
 from shutil import copyfile 
 import argparse 
 import datetime
@@ -26,7 +26,14 @@ parser.add_argument('-f', metavar='path', type=str, nargs='*',
     help="file to be attached to log")
 parser.add_argument('-u', metavar='url', type=str, nargs='*', 
     help='URL to be attached to log')
+parser.add_argument('-o', '--open', metavar='extension', type=str, 
+    choices=['html','pdf','md'], help='open logbook.<html|md|pdf>')
 args = parser.parse_args()
+
+if args.open:
+    print("opening .log/logbook."+args.open)
+    os.system("open .log/logbook."+args.open)
+    sys.exit()
 
 timestamp = datetime.datetime.now().strftime("%c")
 filestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -36,55 +43,68 @@ if CSS_DEBUG:
 else:
     style = '/* Global Styling */\n\n* {\n\tfont-family: monospace;\n\tcolor: #D3D7CF;\n}\n\nbody {\n\twidth: 80%;\n\tmargin: auto;\n\tbackground-color: #151515;\n}\n\na {\n\ttext-decoration: none;\n}\n\nhr {\n\twidth: 100%;\n\tborder-color: #151515;\n}\n\n/* Specific Styling */\n\n.title {}\n\n.section {}\n\n.entry {\n\tbackground: #252525;\n\tborder-radius: 0.25em;\n\tpadding: 1em;\n\tmargin: 0.5em;\n}\n\n.file {\n\tborder: solid 1px;\n\tpadding: 0.5em;\n\ttext-decoration: none;\n}\n\n.important {\n\tcolor: red;\n}\n\n.timestamp {\n\tcolor: #555753;\n}\n\n.copyright {\n\tfont-size: small;\n\ttext-align: center;\n\tpadding: 1em;\n}'
 
-if not os.path.isfile("logbook.html"):
-    with open("logbook.html", 'w') as new_logbook:
+# store everything in .log/
+if not os.path.exists(".log"):
+    os.makedirs(".log")
+
+# write styles and copyright to new html document
+if not os.path.isfile(".log/logbook.html"):
+    with open(".log/logbook.html", 'w') as new_logbook:
             new_logbook.write("<style>\n")
             new_logbook.write(style)
             new_logbook.write("</style>\n")
             new_logbook.write("<p class='copyright'>Logbook software by Harry Beadle and Rhys Thomas</p>\n")
 
-with open("logbook.html", 'a') as logbook:
-    logbook.write("<div class='entry'>")
-    logbook.write("<span class='timestamp'>" + timestamp + "</span><br />") # first, print the timestamp
+# save to temp then logbook.write() if no errors
+with open(".log/temp.html", 'a') as temp:
+    temp.write("<div class='entry'>")
+    temp.write("<span class='timestamp'>" + timestamp + "</span><br />")
     if args.I: # Important
-        logbook.write("<span class='important'>Important</span><br />")
+        temp.write("<span class='important'>Important</span><br />")
     if args.c: # Colour
-        logbook.write("<span style='color:" + args.c + ";'>")
+        temp.write("<span style='color:" + args.c + ";'>")
     else:
-        logbook.write("<span>")
+        temp.write("<span>")
     if args.t: # Title
-        logbook.write("<h1>" + args.t + "</h1>")
+        temp.write("<h1>" + args.t + "</h1>")
     if args.s: # Section
-        logbook.write("<h2>" + args.s + "</h2>")
+        temp.write("<h2>" + args.s + "</h2>")
     if args.m: # Message
         message = args.m
         mode = 0
         for char in message:
             if char == '`':
                 if mode == 0:
-                    logbook.write("<code>")
+                    temp.write("<code>")
                     mode = 1
                 else:
-                    logbook.write("</code>")
+                    temp.write("</code>")
                     mode = 0
             else:
-                logbook.write(char)
+                temp.write(char)
     if args.f: # File Attachments
-        if not os.path.exists("logfiles"):
-            os.makedirs("logfiles")
-        logbook.write("<p>")
-        # list of files
+        if not os.path.exists(".log/logfiles"):
+            os.makedirs(".log/logfiles")
+        temp.write("<p>")
         for files in args.f:
             name = os.path.basename(files)
-            dst = os.path.join("logfiles", filestamp + '-' + name)
+            dst = os.path.join(".log/logfiles", filestamp + '-' + name)
             copyfile(files, dst)
-            logbook.write("<a class='file' href='" + dst + "'>" + name + "</a> ")
-        logbook.write("</p>")
-    if args.u: # hyperlinks
-        logbook.write("<p>")
+            temp.write("<a class='file' href='" + dst + "'>" + name + "</a> ")
+        temp.write("</p>")
+    if args.u: # Hyperlinks
+        temp.write("<p>")
         for link in args.u:
-            logbook.write("<a class=url href='" + link + "'>" + link + "</a><br />")
+            temp.write("<a class=url href='" + link + "'>" + link + "</a><br />")
             if not link == args.u[-1]:
-                logbook.write("<br />")
-        logbook.write("</p>")
-    logbook.write("</span></div>\n")
+                temp.write("<br />")
+        temp.write("</p>")
+    temp.write("</span></div>\n")
+
+# no errors in CLI entry, now print to html
+with open(".log/logbook.html",'a') as logbook, open(".log/temp.html",'r') as temp:
+    for line in temp:
+        logbook.write(line)
+
+# delete temp
+os.system("rm .log/temp.html")
