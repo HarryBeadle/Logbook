@@ -6,7 +6,7 @@
 # Debug Tools
 CSS_DEBUG = False
 
-import os 
+import os, sys
 from shutil import copyfile 
 import argparse 
 import datetime
@@ -27,7 +27,14 @@ parser.add_argument('-f', metavar='path', type=str, nargs='*',
     help="file to be attached to log")
 parser.add_argument('-u', metavar='url', type=str, nargs='*', 
     help='URL to be attached to log')
+parser.add_argument('-o', '--open', metavar='extension', type=str, 
+    choices=['html','pdf','md'], help='open logbook.<html|md|pdf>')
 args = parser.parse_args()
+
+if args.open:
+    print("opening .log/logbook."+args.open)
+    os.system("open .log/logbook."+args.open)
+    sys.exit()
 
 timestamp = datetime.datetime.now().strftime("%c")
 filestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
