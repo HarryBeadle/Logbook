@@ -37,14 +37,18 @@ if CSS_DEBUG:
 else:
     style = '/* Global Styling */\n\n* {\n\tfont-family: monospace;\n\tcolor: #D3D7CF;\n}\n\nbody {\n\twidth: 80%;\n\tmargin: auto;\n\tbackground-color: #151515;\n}\n\na {\n\ttext-decoration: none;\n}\n\nhr {\n\twidth: 100%;\n\tborder-color: #151515;\n}\n\n/* Specific Styling */\n\n.title {}\n\n.section {}\n\n.entry {\n\tbackground: #252525;\n\tborder-radius: 0.25em;\n\tpadding: 1em;\n\tmargin: 0.5em;\n}\n\n.file {\n\tborder: solid 1px;\n\tpadding: 0.5em;\n\ttext-decoration: none;\n}\n\n.important {\n\tcolor: red;\n}\n\n.timestamp {\n\tcolor: #555753;\n}\n\n.copyright {\n\tfont-size: small;\n\ttext-align: center;\n\tpadding: 1em;\n}'
 
-if not os.path.isfile("logbook.html"):
-    with open("logbook.html", 'w') as new_logbook:
+# store everything in .log
+if not os.path.exists(".log"):
+    os.makedirs(".log")
+
+if not os.path.isfile(".log/logbook.html"):
+    with open(".log/logbook.html", 'w') as new_logbook:
             new_logbook.write("<style>\n")
             new_logbook.write(style)
             new_logbook.write("</style>\n")
             new_logbook.write("<p class='copyright'>Logbook software by Harry Beadle and Rhys Thomas</p>\n")
 
-with open("logbook.html", 'a') as logbook:
+with open(".log/logbook.html", 'a') as logbook:
     logbook.write("<div class='entry'>")
     logbook.write("<span class='timestamp'>" + timestamp + "</span><br />") # first, print the timestamp
     if args.I: # Important
@@ -71,13 +75,13 @@ with open("logbook.html", 'a') as logbook:
             else:
                 logbook.write(char)
     if args.f: # File Attachments
-        if not os.path.exists("logfiles"):
-            os.makedirs("logfiles")
+        if not os.path.exists(".log/logfiles"):
+            os.makedirs(".log/logfiles")
         logbook.write("<p>")
         # list of files
         for files in args.f:
             name = os.path.basename(files)
-            dst = os.path.join("logfiles", filestamp + '-' + name)
+            dst = os.path.join(".log/logfiles", filestamp + '-' + name)
             copyfile(files, dst)
             logbook.write("<a class='file' href='" + dst + "'>" + name + "</a> ")
         logbook.write("</p>")
