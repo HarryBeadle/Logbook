@@ -88,9 +88,10 @@ with open(".log/temp.html", 'a') as temp:
         temp.write("<p>")
         for files in args.f:
             name = os.path.basename(files)
-            dst = os.path.join("logfiles", filestamp + '-' + name)
+            dst = os.path.join(".log/logfiles", filestamp + '-' + name)
             copyfile(files, dst)
-            temp.write("<a class='file' href='" + dst + "'>" + name + "</a> ")
+            # dst[5:] removes the .log/ rather than making a new variable
+            temp.write("<a class='file' href='" + dst[5:] + "'>" + name + "</a> ")
         temp.write("</p>")
     if args.u: # Hyperlinks
         temp.write("<p>")
