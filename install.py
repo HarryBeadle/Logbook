@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Install Logbook
 # Harry Beadle and Rhys Thomas
 
@@ -9,12 +10,12 @@ from shutil import copyfile
 p = platform.system()
 
 if p == "Linux" or p == "Darwin":
-    if os.path.isdir("~/.bin"):
-        dir = "~/.bin/"
+    if os.path.isdir(os.path.expanduser("~/.bin")):
+        dir = os.path.expanduser("~/.bin")
     else:
         dir = "/usr/local/bin"
 
-    print("Copying files to %s." % dir)
+    print("Copying files to %s" % dir)
     copyfile("log.py", dir + "/log")
     print("Done.")
 
