@@ -8,7 +8,7 @@ from shutil import copyfile
 
 p = platform.system()
 
-if p == "Linux":
+if p == "Linux" or p == "Darwin":
     if os.path.isdir("~/.bin"):
         dir = "~/.bin/"
     else:
