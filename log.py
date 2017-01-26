@@ -28,15 +28,12 @@ parser.add_argument('-f', metavar='path', type=str, nargs='*',
     help="file to be attached to log")
 parser.add_argument('-u', metavar='url', type=str, nargs='*', 
     help='URL to be attached to log')
-parser.add_argument('-open', nargs='?', const='html', metavar='extension', type=str, 
-    choices=['html'], help='open logbook in <html>')
+parser.add_argument('-open', action='store_true', help='open the logbook')
 args = parser.parse_args()
 
 # Opening the Logbook
 if args.open:
-    print("opening logbook as a " + args.open.upper())
-    if args.open == "html":
-        webbrowser.open(".log/logbook.html")
+    webbrowser.open(".log/logbook.html")
     sys.exit()
 
 # Generate Stamps
@@ -55,62 +52,47 @@ if not os.path.exists(".log"):
 
 # write styles and copyright to new html document
 if not os.path.isfile(".log/logbook.html"):
-    with open(".log/logbook.html", 'w') as new_logbook:
-            new_logbook.write("<style>\n")
-            new_logbook.write(style)
-            new_logbook.write("</style>\n")
-            new_logbook.write("<p class='copyright'>Logbook software by Harry Beadle and Rhys Thomas</p>\n")
+    with open(".log/logbook.html", 'w') as logbook:
+            logbook.write("<style>\n")
+            logbook.write(style)
+            logbook.write("</style>\n")
+            logbook.write("<p class='copyright'>Logbook software by Harry Beadle and Rhys Thomas</p>\n")
 
 # save to temp then logbook.write() if no errors
-with open(".log/temp.html", 'a') as temp:
-    temp.write("<div class='entry'>")
-    temp.write("<span class='timestamp'>" + timestamp + "</span><br />")
-    if args.I: # Important
-        temp.write("<span class='important'>Important</span><br />")
-    if args.c: # Colour
-        temp.write("<span style='color:" + args.c + ";'>")
-    else:
-        temp.write("<span>")
-    if args.t: # Title
-        temp.write("<h1>" + args.t + "</h1>")
-    if args.s: # Section
-        temp.write("<h2>" + args.s + "</h2>")
-    if args.m: # Message
-        message = args.m
-        mode = 0
-        for char in message:
-            if char == '`':
-                if mode == 0:
-                    temp.write("<code>")
-                    mode = 1
-                else:
-                    temp.write("</code>")
-                    mode = 0
-            else:
-                temp.write(char)
-    if args.f: # File Attachments
-        if not os.path.exists(".log/logfiles"):
-            os.makedirs(".log/logfiles")
-        temp.write("<p>")
-        for files in args.f:
-            name = os.path.basename(files)
-            dst = os.path.join(".log/logfiles", filestamp + '-' + name)
-            copyfile(files, dst)
-            temp.write("<a class='file' href='" + dst + "'>" + name + "</a> ")
-        temp.write("</p>")
-    if args.u: # Hyperlinks
-        temp.write("<p>")
-        for link in args.u:
-            temp.write("<a class=url href='" + link + "'>" + link + "</a><br />")
-            if not link == args.u[-1]:
-                temp.write("<br />")
-        temp.write("</p>")
-    temp.write("</span></div>\n")
+buffer += ("<div class='entry'>")
+buffer += ("<span class='timestamp'>" + timestamp + "</span><br />")
+if args.I: # Important
+    buffer += ("<span class='important'>Important</span><br />")
+if args.c: # Colour
+    buffer += ("<span style='color:" + args.c + ";'>")
+else:
+    buffer += ("<span>")
+if args.t: # Title
+    buffer += ("<h1>" + args.t + "</h1>")
+if args.s: # Section
+    buffer += ("<h2>" + args.s + "</h2>")
+if args.m: # Message
+    buffer += args.m
+if args.f: # File Attachments
+    if not os.path.exists(".log/logfiles"):
+        os.makedirs(".log/logfiles")
+    buffer += ("<p>")
+    for files in args.f:
+        name = os.path.basename(files)
+        dst = os.path.join(".log/logfiles", filestamp + '-' + name)
+        copyfile(files, dst)
+        # dst[5:] removes the .log/ rather than making a new variable
+        buffer += ("<a class='file' href='" + dst[5:] + "'>" + name + "</a> ")
+    buffer += ("</p>")
+if args.u: # Hyperlinks
+    buffer += ("<p>")
+    for link in args.u:
+        buffer += ("<a class=url href='" + link + "'>" + link + "</a><br />")
+        if not link == args.u[-1]:
+            buffer += ("<br />")
+    buffer += ("</p>")
+buffer += ("</span></div>\n")
 
 # no errors in CLI entry, now print to html
-with open(".log/logbook.html",'a') as logbook, open(".log/temp.html",'r') as temp:
-    for line in temp:
-        logbook.write(line)
-
-# delete temp
-os.system("rm .log/temp.html")
+with open(".log/logbook.html",'a') as logbook:
+        logbook.write(buffer)
