@@ -4,7 +4,7 @@
 # log.py logbook generation software
 
 # Debug Tools
-CSS_DEBUG = False
+CSS_DEBUG = True
 
 import os, sys
 from shutil import copyfile 
@@ -15,20 +15,57 @@ import webbrowser
 
 # Parse Arguments
 parser = argparse.ArgumentParser(
-    description = "Appends a log to logbook.html")
-parser.add_argument('-m', metavar='message', type=str, 
-    help = "message for log")
-parser.add_argument('-I', action='store_true', help="important")
-parser.add_argument('-t', metavar="title", type=str, help="title")
-parser.add_argument('-s', metavar="section header", type=str, 
-    help="section header")
-parser.add_argument('-c', metavar='color', type=str,
-    help="color the text this CSS color")
-parser.add_argument('-f', metavar='path', type=str, nargs='*',
-    help="file to be attached to log")
-parser.add_argument('-u', metavar='url', type=str, nargs='*', 
-    help='URL to be attached to log')
-parser.add_argument('-open', action='store_true', help='open the logbook')
+    prog = "log",
+    description = "Appends a log to logbook.html"
+)
+parser.add_argument(
+    '-m', 
+    metavar='message',
+    type=str, 
+    help = "message for log"
+)
+parser.add_argument(
+    '-I', 
+    action='store_true', 
+    help="important"
+)
+parser.add_argument(
+    '-t',
+    metavar="title",
+    type=str,
+    help="title"
+)
+parser.add_argument(
+    '-s', 
+    metavar="section header", 
+    type=str, 
+    help="section header"
+)
+parser.add_argument(
+    '-c', 
+    metavar='color', 
+    type=str,
+    help="color the text this CSS color"
+)
+parser.add_argument(
+    '-f', 
+    metavar='path', 
+    type=str, 
+    nargs='*',
+    help="file to be attached to log"
+)
+parser.add_argument(
+    '-u', 
+    metavar='url',
+    type=str, 
+    nargs='*', 
+    help='URL to be attached to log'
+)
+parser.add_argument(
+    '-open',
+    action='store_true',
+    help='open the logbook'
+)
 args = parser.parse_args()
 
 # Opening the Logbook
@@ -59,6 +96,7 @@ if not os.path.isfile(".log/logbook.html"):
             logbook.write("<p class='copyright'>Logbook software by Harry Beadle and Rhys Thomas</p>\n")
 
 # save to temp then logbook.write() if no errors
+buffer = ""
 buffer += ("<div class='entry'>")
 buffer += ("<span class='timestamp'>" + timestamp + "</span><br />")
 if args.I: # Important
