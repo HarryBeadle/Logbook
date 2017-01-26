@@ -10,6 +10,8 @@ import os, sys
 from shutil import copyfile 
 import argparse 
 import datetime
+import platform
+import webbrowser
 
 # Parse Arguments
 parser = argparse.ArgumentParser(
@@ -26,18 +28,22 @@ parser.add_argument('-f', metavar='path', type=str, nargs='*',
     help="file to be attached to log")
 parser.add_argument('-u', metavar='url', type=str, nargs='*', 
     help='URL to be attached to log')
-parser.add_argument('-o', '--open', metavar='extension', type=str, 
-    choices=['html','pdf','md'], help='open logbook.<html|md|pdf>')
+parser.add_argument('-open', nargs='?', const='html', metavar='extension', type=str, 
+    choices=['html'], help='open logbook in <html>')
 args = parser.parse_args()
 
+# Opening the Logbook
 if args.open:
-    print("opening .log/logbook."+args.open)
-    os.system("open .log/logbook."+args.open)
+    print("opening logbook as a " + args.open.upper())
+    if args.open == "html":
+        webbrowser.open(".log/logbook.html")
     sys.exit()
 
+# Generate Stamps
 timestamp = datetime.datetime.now().strftime("%c")
 filestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 
+# Include CSS
 if CSS_DEBUG:
     style = open("logbookstyle.css", "r").read()
 else:
