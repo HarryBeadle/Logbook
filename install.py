@@ -18,7 +18,6 @@ if p == "Linux" or p == "Darwin":
 
     print("Copying files to %s" % dir)
     copyfile("log.py", dir + "/log")
-    print("Done.")
 
 if p == "Windows":
     print("Windows is not currently supported by the installer.")
