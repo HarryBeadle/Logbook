@@ -4,7 +4,7 @@
 # log.py logbook generation software
 
 # Debug Tools
-CSS_DEBUG = True
+CSS_DEBUG = False
 
 import os, sys
 from shutil import copyfile 
