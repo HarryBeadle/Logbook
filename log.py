@@ -7,8 +7,8 @@
 CSS_DEBUG = False
 
 import os, sys
-from shutil import copyfile 
-import argparse 
+from shutil import copyfile
+import argparse
 import datetime
 import platform
 import webbrowser
@@ -19,14 +19,14 @@ parser = argparse.ArgumentParser(
     description = "Appends a log to logbook.html"
 )
 parser.add_argument(
-    '-m', 
+    '-m',
     metavar='message',
-    type=str, 
+    type=str,
     help = "message for log"
 )
 parser.add_argument(
-    '-I', 
-    action='store_true', 
+    '-I',
+    action='store_true',
     help="important"
 )
 parser.add_argument(
@@ -36,29 +36,29 @@ parser.add_argument(
     help="title"
 )
 parser.add_argument(
-    '-s', 
-    metavar="section header", 
-    type=str, 
+    '-s',
+    metavar="section header",
+    type=str,
     help="section header"
 )
 parser.add_argument(
-    '-c', 
-    metavar='color', 
+    '-c',
+    metavar='color',
     type=str,
     help="color the text this CSS color"
 )
 parser.add_argument(
-    '-f', 
-    metavar='path', 
-    type=str, 
+    '-f',
+    metavar='path',
+    type=str,
     nargs='*',
     help="file to be attached to log"
 )
 parser.add_argument(
-    '-u', 
+    '-u',
     metavar='url',
-    type=str, 
-    nargs='*', 
+    type=str,
+    nargs='*',
     help='URL to be attached to log'
 )
 parser.add_argument(
