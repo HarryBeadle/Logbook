@@ -12,6 +12,7 @@ import argparse
 import datetime
 import platform
 import webbrowser
+import cgi
 
 # Parse Arguments
 parser = argparse.ArgumentParser(
@@ -106,11 +107,11 @@ if args.c: # Colour
 else:
     buffer += ("<span>")
 if args.t: # Title
-    buffer += ("<h1>" + args.t + "</h1>")
+    buffer += ("<h1>" + cgi.escape(args.t) + "</h1>")
 if args.s: # Section
-    buffer += ("<h2>" + args.s + "</h2>")
+    buffer += ("<h2>" + cgi.escape(args.s) + "</h2>")
 if args.m: # Message
-    buffer += args.m
+    buffer += cgi.escape(args.m)
 if args.f: # File Attachments
     if not os.path.exists(".log/logfiles"):
         os.makedirs(".log/logfiles")
