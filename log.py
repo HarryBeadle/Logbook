@@ -7,11 +7,12 @@
 CSS_DEBUG = False
 
 import os, sys
-from shutil import copyfile 
-import argparse 
+from shutil import copyfile
+import argparse
 import datetime
 import platform
 import webbrowser
+import cgi
 
 # Parse Arguments
 parser = argparse.ArgumentParser(
@@ -19,14 +20,14 @@ parser = argparse.ArgumentParser(
     description = "Appends a log to logbook.html"
 )
 parser.add_argument(
-    '-m', 
+    '-m',
     metavar='message',
-    type=str, 
+    type=str,
     help = "message for log"
 )
 parser.add_argument(
-    '-I', 
-    action='store_true', 
+    '-I',
+    action='store_true',
     help="important"
 )
 parser.add_argument(
@@ -36,29 +37,29 @@ parser.add_argument(
     help="title"
 )
 parser.add_argument(
-    '-s', 
-    metavar="section header", 
-    type=str, 
+    '-s',
+    metavar="section header",
+    type=str,
     help="section header"
 )
 parser.add_argument(
-    '-c', 
-    metavar='color', 
+    '-c',
+    metavar='color',
     type=str,
     help="color the text this CSS color"
 )
 parser.add_argument(
-    '-f', 
-    metavar='path', 
-    type=str, 
+    '-f',
+    metavar='path',
+    type=str,
     nargs='*',
     help="file to be attached to log"
 )
 parser.add_argument(
-    '-u', 
+    '-u',
     metavar='url',
-    type=str, 
-    nargs='*', 
+    type=str,
+    nargs='*',
     help='URL to be attached to log'
 )
 parser.add_argument(
@@ -106,11 +107,11 @@ if args.c: # Colour
 else:
     buffer += ("<span>")
 if args.t: # Title
-    buffer += ("<h1>" + args.t + "</h1>")
+    buffer += ("<h1>" + cgi.escape(args.t) + "</h1>")
 if args.s: # Section
-    buffer += ("<h2>" + args.s + "</h2>")
+    buffer += ("<h2>" + cgi.escape(args.s) + "</h2>")
 if args.m: # Message
-    buffer += args.m
+    buffer += cgi.escape(args.m)
 if args.f: # File Attachments
     if not os.path.exists(".log/logfiles"):
         os.makedirs(".log/logfiles")
